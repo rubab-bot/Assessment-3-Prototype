@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SURE PULSE – Interactive Prototype (AT3)</title>
+<style>
+:root{--bg:#0f1c27;--card:#172532;--card2:#1e3142;--line:#2a4054;--tx:#f3f6f5;--mu:#a9bac3;--gr:#b8f46a;--or:#ffa56b;--mt:#90e2ba;--rd:#f58384}
+*{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--tx);line-height:1.45}
+:focus-visible{outline:3px solid var(--gr);outline-offset:2px}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:12px 24px;border-bottom:1px solid var(--line)}
+.logo b{color:var(--gr);font-size:22px;letter-spacing:2px}.logo span{color:var(--mu);font-size:12px;margin-left:8px}
+.badge{background:#3a2a1c;color:var(--or);border:1px solid var(--or);border-radius:20px;padding:3px 10px;font-size:11px;letter-spacing:1px}
+.hr{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--mu)}
+.hr button{background:var(--card);color:var(--mu);border:1px solid var(--line);padding:6px 14px;border-radius:16px;cursor:pointer;font-size:13px}
+.hr button.on{background:var(--gr);color:#172532;font-weight:700}
+nav{display:flex;flex-wrap:wrap;gap:2px;padding:6px 24px;background:#132230}
+nav button{background:none;border:none;color:var(--mu);padding:10px 12px;cursor:pointer;border-bottom:3px solid transparent;font-size:14px}
+nav button.on{color:var(--gr);border-color:var(--gr)}nav button.lk{opacity:.5}
+.wrap{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:20px;max-width:1220px;margin:0 auto;padding:22px}
+@media(max-width:960px){.wrap{grid-template-columns:1fr}}
+h2{margin:0 0 4px;font-size:25px}.sub{color:var(--mu);margin:0 0 16px;font-size:14px}.tag{color:var(--mu);font-size:11px;letter-spacing:1.5px;text-transform:uppercase}
+.card{background:var(--card);border-radius:14px;padding:18px;margin-bottom:14px;border:1px solid var(--line)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+label{display:block;color:var(--mu);font-size:11px;letter-spacing:1.2px;margin:10px 0 5px;text-transform:uppercase}
+input,select,textarea{width:100%;background:var(--card2);color:var(--tx);border:1px solid #3a5873;border-radius:8px;padding:9px;font-size:14px}
+input[type=range]{padding:0}input[type=checkbox]{width:auto;margin-right:6px}
+.btn{background:var(--gr);color:#172532;font-weight:700;border:none;border-radius:8px;padding:10px 18px;cursor:pointer;margin:12px 8px 0 0}
+.btn.sec{background:none;color:var(--tx);border:1px solid #4a6a85;font-weight:400}.btn:disabled{opacity:.4;cursor:not-allowed}
+.msg{padding:10px 14px;border-radius:8px;margin-top:12px;font-size:14px}
+.err{background:#3a1f26;color:var(--rd);border:1px solid var(--rd)}.ok{background:#16322a;color:var(--mt);border:1px solid var(--mt)}.warn{background:#3a2a1c;color:var(--or);border:1px solid var(--or)}.info{background:#14293a;color:#9fd0f2;border:1px solid #3d6f96}
+.big{font-size:30px;font-weight:700;color:var(--gr)}.org{color:var(--or)}.neg{color:var(--rd)}.pos{color:var(--gr)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right}th:first-child,td:first-child{text-align:left}th{color:var(--mu);font-size:11px;letter-spacing:1px;text-transform:uppercase}
+.bar{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:13px}.bar .l{width:56px;color:var(--mu)}.bar .b{height:13px;border-radius:4px}
+.opt.sel{border-color:var(--gr);box-shadow:0 0 0 1px var(--gr)}
+.locked{background:#16322a;border:1px solid var(--mt);color:var(--mt);padding:14px;border-radius:10px;margin:10px 0}
+.pill{display:inline-block;background:var(--card2);padding:3px 10px;border-radius:12px;font-size:12px;margin:2px 4px 2px 0;color:var(--mt)}
+aside .card{position:sticky;top:10px}aside ol{padding-left:0;list-style:none;margin:8px 0}
+aside li{padding:7px 8px;border-radius:8px;font-size:13px;color:var(--mu);margin:3px 0;border:1px solid transparent}
+aside li.a{color:var(--tx)}aside li.cur{background:var(--card2);border-color:var(--gr);color:var(--tx)}aside li.done{color:var(--mt)}
+aside .who{font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:1px}
+.ov{position:fixed;inset:0;background:rgba(5,12,18,.88);display:flex;align-items:center;justify-content:center;z-index:9;padding:20px}
+.ov .card{max-width:620px;max-height:90vh;overflow:auto}
+.chk{display:flex;gap:8px;margin:6px 0;font-size:14px}
+footer{text-align:center;color:var(--mu);font-size:12px;padding:18px}
+</style></head><body>
+<header><div class="logo"><b>PULSE</b><span>SURE · demand-informed buying · pilot: one store, sneakers &amp; fleece</span></div>
+<span class="badge">ILLUSTRATIVE UX PROTOTYPE</span>
+<div class="hr" role="group" aria-label="Signed-in role">Signed in as:
+<button id="rS" onclick="setRole('staff')">Sales staff</button><button id="rO" onclick="setRole('owner')">Owner</button>
+<button onclick="showGuide()">Demo guide</button><button onclick="resetAll()">Reset data</button></div></header>
+<nav id="nav" aria-label="Use cases"></nav>
+<div class="wrap"><main id="app" aria-live="polite"></main><aside id="side"></aside></div>
+<div id="modal"></div>
+<footer>Illustrative data and assumptions only; not a production system or SURE's records. Enquiries are demand signals, not sales. PULSE never places orders. Role permissions follow Figure 3 (owner inherits staff functions).</footer>
+<script>
+const KEY='pulse_proto_v2';
+const $=id=>document.getElementById(id);
+const fmt=(n,d=2)=>'A$'+Number(n).toLocaleString('en-AU',{minimumFractionDigits:d,maximumFractionDigits:d});
+const nf=(n,d=2)=>Number(n).toLocaleString('en-AU',{minimumFractionDigits:d,maximumFractionDigits:d});
+const CATS={Sneakers:{sizes:['UK 7','UK 8','UK 9','UK 10','UK 11'],products:['Vintage sneaker — Model A','Runner — Model B'],sales:{'UK 7':4,'UK 8':12,'UK 9':10,'UK 10':8,'UK 11':5},hist:{'UK 7':26,'UK 8':26,'UK 9':26,'UK 10':26,'UK 11':26}},
+ Fleece:{sizes:['S','M','L','XL'],products:['Fleece jacket — Core','Fleece vest — Classic'],sales:{S:6,M:9,L:7,XL:3},hist:{S:20,M:20,L:20,XL:3}}};
+const OUTS=['Left without buying','Bought an alternative','Will return later'];
+const W={'Left without buying':1,'Will return later':.75,'Bought an alternative':.4};
+const COLS=['Navy','Black','White','Olive'];
+const TABS=[['uc1','UC1 Record enquiry','staff'],['uc5','UC5 Review records','staff'],['uc2','UC2 Forecast','owner'],['uc3','UC3 Compare buys','owner'],['uc4','UC4 Approve plan','owner'],['biz','Business case','all']];
+const STEPS={
+uc1:{who:'Staff · owner inherits',t:['Open “Record enquiry”','System: product search and category fallback','Select item, size/colour, outcome','System: check details, flag related entries, preview','Confirm preview','System: save enquiry, show reference']},
+uc5:{who:'Staff · owner inherits',t:['Open enquiry records','System: records permitted by role','Select category and date filters','System: matching records and outcome totals','Select an enquiry','System: variant, outcome, reference']},
+uc2:{who:'Owner · Shopify supports data',t:['Select category and period','System: check records; show data age, forecast, uncertainty','Open size details','System: sales, enquiries, baseline comparison','Accept or adjust, with reason','System: check adjustment; save forecast and change record']},
+uc3:{who:'Owner',t:['Enter budget, space, supplier terms','System: check amounts, delivery times, order quantities','Compare two product selections','System: quantities, contribution, unsold-stock risk','Select an option and save','System: save draft with forecast and assumptions']},
+uc4:{who:'Owner',t:['Open draft, select Approve','System: recheck budget, data, supply; show summary','Confirm decision and reason','System: save owner, time, reason; protect version','Optionally select Export','System: produce file for existing purchasing']},
+biz:{who:'Owner decision support',t:['Set assumptions (benefits, costs)','View 5-year cash flow','Read payback and ROI','Test sensitivity: half benefits']}};
+let S,ui={step:{},f:{},t0:null,fail:false,xfail:false,conc:false,sel:null,exp:null,appr:false};
+function dago(n){return Date.now()-n*864e5}
+function seed(){
+ const recs=[];let i=0;
+ const add=(cat,size,n,age0,age1)=>{for(let k=0;k<n;k++){i++;recs.push({ref:'ENQ-'+String(i).padStart(4,'0'),cat,prod:CATS[cat].products[k%2],size,colour:COLS[(k+i)%4],out:OUTS[i%3],ts:dago(age0+((age1-age0)*k/Math.max(n-1,1))),by:'Sales staff'})}};
+ add('Sneakers','UK 8',3,2,24);add('Sneakers','UK 9',9,1,27);add('Sneakers','UK 10',5,3,26);add('Sneakers','UK 9',3,35,55);
+ add('Fleece','S',2,4,20);add('Fleece','M',4,2,25);add('Fleece','L',3,3,22);add('Fleece','M',2,38,50);
+ return recs}
+function fresh(){return {role:'staff',tab:'uc1',records:seed(),keys:[],stale:false,reviews:{},expert:{},drafts:null,draft:null,approved:null,audit:[],
+ cons:{budget:5000,space:40,lead:3,sup:true,moq:24},cat:'Sneakers',
+ fin:{lost:12,rec:40,price:120,margin:45,mark:2400,cap:25000,run:4000,adopt:70}}}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.records)return s}catch(e){}return fresh()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function resetAll(){if(!confirm('Reset all prototype data to the seeded demo state?'))return;localStorage.removeItem(KEY);S=fresh();ui={step:{},f:{},t0:null,fail:false,xfail:false,conc:false,sel:null,exp:null,appr:false};render()}
+function audit(a){S.audit.push({t:new Date().toLocaleString('en-AU'),who:S.role==='owner'?'Owner':'Sales staff',a});save()}
+function setRole(r){S.role=r;if(!can(S.tab))S.tab=r==='staff'?'uc1':'uc2';save();render()}
+function can(t){const x=TABS.find(a=>a[0]===t);return x[2]==='all'||x[2]==='staff'||S.role==='owner'}
+function go(t){if(!can(t)){$('app').innerHTML=`<div class="msg err" role="alert"><b>Access restricted.</b> ${TABS.find(a=>a[0]===t)[1]} is an owner-only function (Figure 3). Switch role to “Owner” to continue.</div>`+$('app').innerHTML;return}S.tab=t;ui.f={};ui.t0=null;save();render()}
+function step(n){ui.step[S.tab]=n;side()}
+function side(){const s=STEPS[S.tab],cur=ui.step[S.tab]||0;
+ $('side').innerHTML=`<div class="card"><span class="tag">Use case flow</span><div class="who">${s.who}</div><ol>${s.t.map((t,i)=>`<li class="${i===cur?'cur':i<cur?'done':'a'}">${i+1}. ${t}</li>`).join('')}</ol><div class="sub" style="margin:0">Highlights the current step of the expanded use case table in the proposal.</div></div>`}
+function render(){
+ $('rS').className=S.role==='staff'?'on':'';$('rO').className=S.role==='owner'?'on':'';
+ $('nav').innerHTML=TABS.map(t=>`<button class="${S.tab===t[0]?'on':''} ${can(t[0])?'':'lk'}" onclick="go('${t[0]}')">${t[1]}${can(t[0])?'':' 🔒'}</button>`).join('');
+ const v={uc1,uc2,uc3,uc4,uc5,biz}[S.tab]();$('app').innerHTML=v;side();if(S.tab==='biz')finCalc()}
+function M(id,t,c){const e=$(id);if(e)e.innerHTML=`<div class="msg ${c}" role="${c==='err'?'alert':'status'}">${t}</div>`}
+/* data helpers */
+function recent(cat,days=28){return S.records.filter(r=>r.cat===cat&&r.ts>=dago(days))}
+function demand(cat,size){return recent(cat).filter(r=>r.size===size).reduce((a,r)=>a+W[r.out],0)}
+function fc(cat,size){return Math.round(CATS[cat].sales[size]+demand(cat,size))}
+function limited(cat,size){return CATS[cat].hist[size]<8}
+function totalFc(cat){return CATS[cat].sizes.reduce((a,s)=>a+(limited(cat,s)&&S.expert[cat+s]!=null?S.expert[cat+s]:fc(cat,s)),0)}
+function base(cat){return CATS[cat].sizes.reduce((a,s)=>a+CATS[cat].sales[s],0)}
+/* UC1 */
+function uc1(){const f=ui.f;if(!ui.t0)ui.t0=null;
+ const cat=f.cat||'Sneakers';
+ return `<h2>Record an unmet customer request</h2><p class="sub">Short staff form on an existing device. No customer name or contact details are collected.</p>
+ <div class="card"><span class="tag">Staff / record enquiry</span>
+ <div class="grid"><div><label for="c1">Category</label><select id="c1" onchange="fld('cat',this.value);ui.f.prod='';ui.f.size='';render()">${Object.keys(CATS).map(c=>`<option ${cat===c?'selected':''}>${c}</option>`).join('')}</select></div>
+ <div><label for="p1">Product (search/select)</label><select id="p1" onchange="fld('prod',this.value)"><option value="">Select product…</option>${CATS[cat].products.map(p=>`<option ${f.prod===p?'selected':''}>${p}</option>`).join('')}</select></div>
+ <div><label for="s1">Requested size</label><select id="s1" onchange="fld('size',this.value)"><option value="">Select size</option>${CATS[cat].sizes.map(s=>`<option ${f.size===s?'selected':''}>${s}</option>`).join('')}</select></div>
+ <div><label for="k1">Colour</label><select id="k1" onchange="fld('colour',this.value)"><option value="">Select colour</option>${COLS.map(s=>`<option ${f.colour===s?'selected':''}>${s}</option>`).join('')}</select></div>
+ <div><label for="o1">Customer outcome</label><select id="o1" onchange="fld('out',this.value)"><option value="">Select outcome</option>${OUTS.map(s=>`<option ${f.out===s?'selected':''}>${s}</option>`).join('')}</select></div></div>
+ <span class="pill">NO CUSTOMER IDENTITY REQUIRED</span><span class="pill">ENQUIRY ≠ SALE</span>
+ <label><input type="checkbox" ${ui.fail?'checked':''} onchange="ui.fail=this.checked"> Demo: simulate a connection failure on the next save</label>
+ <button class="btn" onclick="check1()">Check &amp; preview</button><button class="btn sec" onclick="cancel1()">Cancel</button><div id="m1"></div></div>`}
+function fld(k,v){if(!ui.t0)ui.t0=Date.now();ui.f[k]=v;step(2)}
+function cancel1(){if(Object.keys(ui.f).length&&!confirm('Discard this entry?'))return;ui.f={};ui.t0=null;render()}
+function check1(){const f=ui.f;step(3);
+ if(!f.prod)return M('m1','Select a product (step 3).','err');
+ if(!f.size)return M('m1','Select size. Missing size returns you to step 3.','err');
+ if(!f.colour)return M('m1','Select a colour (step 3).','err');
+ if(!f.out)return M('m1','Select the customer outcome. An unavailable item does not always mean a lost sale.','err');
+ const rel=S.records.filter(r=>r.prod===f.prod&&r.size===f.size&&r.colour===f.colour&&r.ts>=dago(28)).length;
+ if(!ui.sub)ui.sub='k'+Date.now();
+ $('m1').innerHTML=`<div class="msg info"><b>Preview</b><br>${f.prod} · ${f.size} · ${f.colour} · ${f.out}${rel?`<br>⚠ ${rel} related entr${rel>1?'ies':'y'} for this exact variant in the last 28 days. Still save as a new enquiry?`:''}<br>
+ <button class="btn" onclick="save1()">Confirm &amp; save</button><button class="btn sec" onclick="step(2);M('m1','Returned to edit.','info')">Edit</button></div>`;step(4)}
+function save1(){
+ if(ui.fail){ui.fail=false;M('m1','Connection failed. Your draft is kept. <button class="btn sec" onclick="save1()">Retry</button>','err');return}
+ if(S.keys.includes(ui.sub)){return M('m1','This submission was already saved. No duplicate created.','warn')}
+ S.keys.push(ui.sub);const f=ui.f;const n=S.records.length+1;const secs=ui.t0?Math.round((Date.now()-ui.t0)/1000):0;
+ const ref='ENQ-'+String(n).padStart(4,'0');
+ S.records.push({ref,cat:f.cat||'Sneakers',prod:f.prod,size:f.size,colour:f.colour,out:f.out,ts:Date.now(),by:S.role==='owner'?'Owner':'Sales staff'});
+ audit('Recorded enquiry '+ref);ui.f={};ui.t0=null;ui.sub=null;save();render();step(5);
+ M('m1',`Saved as <b>${ref}</b> in ${secs} seconds (pilot target: median under 15 seconds). It now counts as demand evidence in UC2, not as a sale.`,'ok')}
+/* UC5 */
+function uc5(){const f=ui.f;const fl=S.records.filter(r=>S.role==='owner'||r.ts>=dago(30));
+ const cat=f.rc||'All',range=f.rd||'28';
+ const rows=fl.filter(r=>(cat==='All'||r.cat===cat)&&r.ts>=dago(+range)).sort((a,b)=>b.ts-a.ts);
+ const out={};rows.forEach(r=>out[r.out]=(out[r.out]||0)+1);
+ const sel=ui.sel&&S.records.find(r=>r.ref===ui.sel);
+ return `<h2>Review enquiry records</h2><p class="sub">Read-only view of what customers asked for. ${S.role==='owner'?'Owner sees the full history.':'Staff see records from the last 30 days.'} Saved data is not changed.</p>
+ <div class="card"><div class="grid"><div><label for="rc">Category</label><select id="rc" onchange="ui.f.rc=this.value;ui.sel=null;render();step(3)">${['All',...Object.keys(CATS)].map(c=>`<option ${cat===c?'selected':''}>${c}</option>`).join('')}</select></div>
+ <div><label for="rd">Date range</label><select id="rd" onchange="ui.f.rd=this.value;ui.sel=null;render();step(3)">${[['7','Last 7 days'],['28','Last 28 days'],['30','Last 30 days'],['90','Last 90 days']].filter(x=>S.role==='owner'||+x[0]<=30).map(x=>`<option value="${x[0]}" ${range===x[0]?'selected':''}>${x[1]}</option>`).join('')}</select></div></div>
+ <button class="btn sec" onclick="expire()">Demo: simulate expired session</button><button class="btn sec" onclick="ui.f.rfail=true;render()">Demo: simulate unavailable record</button>
+ ${rows.length?`<div style="margin:12px 0">${OUTS.map(o=>`<span class="pill">${o}: ${out[o]||0}</span>`).join('')}<span class="pill">Total: ${rows.length}</span></div>
+ <table><tr><th>Reference</th><th>Category</th><th>Variant</th><th>Outcome</th><th>Date</th></tr>${rows.slice(0,12).map(r=>`<tr style="cursor:pointer" tabindex="0" onclick="pick('${r.ref}')" onkeydown="if(event.key==='Enter')pick('${r.ref}')"><td>${r.ref}</td><td>${r.cat}</td><td>${r.size} · ${r.colour}</td><td>${r.out}</td><td>${new Date(r.ts).toLocaleDateString('en-AU')}</td></tr>`).join('')}</table>${rows.length>12?`<div class="sub">Showing 12 of ${rows.length}. Narrow the filters.</div>`:''}`
+ :`<div class="msg warn">No matching records. Change the filters (step 3).</div>`}
+ <div id="m5">${sel?(ui.f.rfail?'<div class="msg err">Record data unavailable. <button class="btn sec" onclick="ui.f.rfail=false;render();pick(\''+sel.ref+'\')">Retry</button></div>':`<div class="msg ok"><b>${sel.ref}</b> · ${sel.prod}<br>Variant ${sel.size} · ${sel.colour} · Outcome: ${sel.out} · Recorded by ${sel.by}, ${new Date(sel.ts).toLocaleString('en-AU')}</div>`):''}</div></div>`}
+function pick(r){ui.sel=r;render();step(5)}
+function expire(){$('modal').innerHTML=`<div class="ov" role="dialog" aria-modal="true"><div class="card"><h2>Session expired</h2><p class="sub">Sign in again to display records.</p><button class="btn" onclick="$('modal').innerHTML='';render()">Sign in as ${S.role==='owner'?'Owner':'Sales staff'}</button></div></div>`}
+/* UC2 */
+function uc2(){const cat=S.cat,cs=CATS[cat];const tot=totalFc(cat),b=base(cat);const rev=S.reviews[cat];
+ const lo=Math.round(tot*.85),hi=Math.round(tot*1.2);const needExp=cs.sizes.filter(s=>limited(cat,s));
+ return `<h2>Review the demand forecast</h2><p class="sub">Past sales are only part of the story. A forecast supports the buyer's judgement; it never replaces it.</p>
+ <div class="grid"><div class="card"><span class="tag">Forecast · next 4 weeks</span><div class="big">${tot} units</div><div class="sub" style="margin:0">Range ${lo}–${hi} · sales plus recorded enquiries</div></div>
+ <div class="card"><span class="tag">Recent-sales baseline</span><div class="big" style="color:var(--tx)">${b} units</div><div class="sub" style="margin:0">Enquiries add ${tot-b} units of unmet demand</div></div>
+ <div class="card"><span class="tag">Data freshness</span><div class="big" style="font-size:20px;color:${S.stale?'var(--rd)':'var(--mt)'}">${S.stale?'STALE: last sync 3 days ago':'Synced 1 hour ago'}</div>
+ <button class="btn sec" onclick="S.stale=!S.stale;if(S.stale){S.approved=null}save();render();step(1)">${S.stale?'Simulate fresh import':'Simulate failed import'}</button></div></div>
+ ${S.stale?'<div class="msg err" role="alert">Failed import: showing the last snapshot, marked stale. Approval is blocked downstream (UC4) until data is refreshed.</div>':''}
+ <div class="card"><div class="grid"><div><label for="cat">Category</label><select id="cat" onchange="S.cat=this.value;save();render()">${Object.keys(CATS).map(c=>`<option ${c===cat?'selected':''}>${c}</option>`).join('')}</select></div><div><label for="per">Forecast period</label><select id="per"><option>Next 4 weeks</option></select></div></div>
+ <table style="margin-top:12px"><tr><th>Size</th><th>Sales</th><th>Enquiries (28d)</th><th>Forecast</th><th>Range</th><th></th></tr>
+ ${cs.sizes.map(s=>{const l=limited(cat,s);const e=recent(cat).filter(r=>r.size===s).length;const v=fc(cat,s);return `<tr><td>${s}${l?' <span class="pill" style="color:var(--or)">limited history</span>':''}</td><td>${cs.sales[s]}</td><td class="org">${e}</td><td class="pos">${l?'Expert estimate required':v}</td><td>${l?'–':Math.round(v*.85)+'–'+Math.round(v*1.2)}</td><td><button class="btn sec" style="margin:0;padding:3px 9px" onclick="expl('${s}')">Details</button></td></tr>`}).join('')}</table><div id="ex"></div></div>
+ <div class="card"><span class="tag">Illustrative backtest (to be measured in pilot)</span><div class="grid"><div>Recent-sales baseline error: <b>18.0%</b></div><div>PULSE forecast error: <b class="pos">15.5%</b></div><div>Reduction: <b class="pos">13.9%</b> (target: 10%)</div></div></div>
+ <div class="card"><span class="tag">Owner oversight</span>
+ ${needExp.map(s=>`<div><label for="x${s.replace(' ','')}">Expert estimate for ${s} (units)</label><input id="x${s.replace(' ','')}" type="number" min="0" value="${S.expert[cat+s]??''}"></div>`).join('')}
+ <div class="grid"><div><label for="adj">Owner revised forecast, category total (units)</label><input id="adj" type="number" min="0" value="${rev?rev.v:''}" placeholder="${tot}"></div>
+ <div><label for="why">Reason for adjustment</label><input id="why" value="${rev?rev.r:''}" placeholder="e.g. local launch event expected"></div></div>
+ <button class="btn" onclick="saveRev()">Accept / save review</button><div id="m2">${rev?`<div class="msg ok">Reviewed forecast v${rev.ver} saved ${rev.when}. Change record created.</div>`:''}</div></div>`}
+function expl(s){step(3);const cat=S.cat,rs=recent(cat).filter(r=>r.size===s);const c={};rs.forEach(r=>c[r.out]=(c[r.out]||0)+1);
+ $('ex').innerHTML=`<div class="msg info"><b>${s}:</b> ${CATS[cat].sales[s]} sales + weighted enquiries (${OUTS.map(o=>`${c[o]||0} ${o.toLowerCase()} × ${W[o]}`).join(', ')}) = ${fc(cat,s)} units. Recent-sales-only baseline = ${CATS[cat].sales[s]}. Enquiries are weighted by outcome because someone who bought an alternative is a weaker demand signal than someone who left. Weights are illustrative; PULSE would calibrate them against actual outcomes.</div>`;step(3)}
+function saveRev(){const cat=S.cat,cs=CATS[cat];step(5);
+ for(const s of cs.sizes.filter(s=>limited(cat,s))){const el=$('x'+s.replace(' ',''));if(!el.value)return M('m2',`${s} has limited sales history. Enter an expert estimate (step 5).`,'err');S.expert[cat+s]=+el.value}
+ const tot=totalFc(cat);const a=$('adj').value,r=$('why').value.trim();const v=a===''?tot:+a;
+ if(v!==tot&&!r)return M('m2','An adjustment without a reason is rejected. Add a reason and save again.','err');
+ const ver=(S.reviews[cat]?S.reviews[cat].ver:0)+1;
+ S.reviews[cat]={v,r,ver,when:new Date().toLocaleString('en-AU')};audit(`Reviewed ${cat} forecast v${ver} (${v} units${r?', reason: '+r:''})`);S.approved=null;save();render();step(5)}
+/* UC3 */
+function evalOpts(cat){const c=S.cons,rev=S.reviews[cat];const D=rev.v,cost=66;
+ const aff=p=>Math.floor(c.budget*p/cost);
+ const A={k:'A',name:'Option A · Core sizes',sub:'Concentrate on known demand',qty:Math.min(aff(.8),c.space,Math.round(D*.9)),cost:cost,m:54,st:[.75,.85,.92]};
+ const B={k:'B',name:'Option B · Test range',sub:'Trial selected new colours (premium price)',qty:Math.min(aff(.9),c.space,Math.round(D)),cost:70,m:70,st:[.5,.78,1]};
+ [A,B].forEach(o=>{o.spend=o.qty*o.cost;o.lo=Math.round(o.qty*o.st[0]*o.m);o.ex=Math.round(o.qty*o.st[1]*o.m);o.hi=Math.round(o.qty*o.st[2]*o.m);o.unsold=Math.round(o.qty*(1-o.st[0]))});return [A,B]}
+function uc3(){const c=S.cons,revd=Object.keys(S.reviews);const cat=revd.includes(S.cat)?S.cat:revd[0];
+ return `<h2>Compare buying options before spending</h2><p class="sub">PULSE shows a comparison, not an instruction to order stock. It never raises your budget.</p>
+ <div class="card"><span class="tag">Owner / buying options</span>${revd.length?'':'<div class="msg warn">Precondition not met: no reviewed forecast. Complete UC2 first.</div>'}
+ <div class="grid"><div><label for="bc">Reviewed forecast used</label><select id="bc" ${revd.length?'':'disabled'}>${revd.map(x=>`<option ${x===cat?'selected':''}>${x} (v${S.reviews[x].ver}, ${S.reviews[x].v} units)</option>`).join('')}</select></div>
+ <div><label for="bu">Buying budget (A$)</label><input id="bu" type="number" value="${c.budget}"></div><div><label for="sp">Shelf space (units)</label><input id="sp" type="number" value="${c.space}"></div>
+ <div><label for="le">Supplier lead time (weeks)</label><input id="le" type="number" value="${c.lead}"></div><div><label for="mo">Supplier minimum order (units)</label><input id="mo" type="number" value="${c.moq}"></div>
+ <div><label for="su">Supplier confirmation</label><select id="su"><option value="1" ${c.sup?'selected':''}>Confirmed</option><option value="0" ${c.sup?'':'selected'}>Not confirmed</option></select></div></div>
+ <button class="btn" onclick="compare()" ${revd.length?'':'disabled'}>Check &amp; compare options</button><div id="m3"></div></div><div id="cmp">${S.drafts?cmpHtml():''}</div>`}
+function compare(){step(1);const b=+$('bu').value,s=+$('sp').value,l=+$('le').value,m=+$('mo').value;const cat=$('bc').value.split(' ')[0];
+ S.cons={budget:b,space:s,lead:l,moq:m,sup:$('su').value==='1'};
+ if(!(b>0&&s>0&&l>0&&m>0))return M('m3','Enter valid positive amounts, space, lead time and order quantity.','err');
+ if(s<m)return M('m3',`Conflict: shelf space (${s} units) is below the supplier minimum order (${m} units). Change a limit yourself; the budget is not raised automatically. Returned to step 1.`,'err');
+ if(b<m*66)return M('m3',`Conflict: budget ${fmt(b,0)} cannot cover the minimum order (${m} units × A$66 = ${fmt(m*66,0)}). Returned to step 1.`,'err');
+ S.cat=cat;S.drafts={cat,fver:S.reviews[cat].ver,opts:evalOpts(cat),at:Date.now()};save();render();step(3)}
+function cmpHtml(){const d=S.drafts,c=S.cons;
+ return (c.sup?'':'<div class="msg warn">Supply not confirmed. Items are marked unavailable for commitment. You can save a draft, but approval (UC4) is blocked.</div>')+(c.lead>6?'<div class="msg warn">Lead time over 6 weeks may miss the buying window.</div>':'')+`<div class="grid">${d.opts.map(o=>`<div class="card opt ${S.draft&&S.draft.opt===o.k?'sel':''}"><span class="tag">${o.name}</span><h3 style="margin:6px 0">${o.sub}</h3>
+ <span class="tag">Expected contribution</span><div class="big">${fmt(o.ex,0)}</div><div class="sub" style="margin:0">Range ${fmt(o.lo,0)} to ${fmt(o.hi,0)}</div>
+ <p>${o.qty} units · spend ${fmt(o.spend,0)} · lead ${c.lead} weeks<br>Unsold stock if demand is weak: <b class="${o.k==='A'?'pos':'org'}">${o.unsold} units</b> (${o.k==='A'?'lower':'higher'} risk)</p>
+ <button class="btn" onclick="saveDraft('${o.k}')">Save ${o.k} as draft</button></div>`).join('')}</div><div id="m3b"></div>`}
+function saveDraft(k){const d=S.drafts;S.draft={opt:k,fver:d.fver,cat:d.cat,o:d.opts.find(o=>o.k===k),cons:{...S.cons},assump:'Cost A$66/A$70 per unit; sell-through 75–92% (A) and 50–100% (B); illustrative.'};S.approved=null;
+ audit(`Saved draft option ${k} (forecast v${d.fver})`);save();render();step(5);M('m3b',`Draft ${k} saved with forecast v${d.fver} and assumptions. Nothing has been ordered.`,'ok')}
+/* UC4 */
+function checks(){const d=S.draft;if(!d)return null;const cat=d.cat;
+ return [['Draft saved',true],['Budget covers draft',d.o.spend<=S.cons.budget],['Data is current',!S.stale],['Supply confirmed',S.cons.sup],['Forecast unchanged since draft',S.reviews[cat]&&S.reviews[cat].ver===d.fver]]}
+function uc4(){const d=S.draft,ck=checks();const ready=ck&&ck.every(c=>c[1]);
+ return `<h2>Approve the buying plan</h2><p class="sub">The owner decides. PULSE rechecks readiness, records who approved and why, then protects the approved version.</p>
+ <div class="card"><span class="tag">Owner / approve plan</span>
+ ${!d?'<div class="msg warn">No draft yet. Save a draft in UC3.</div>':`<p><b>${d.o.name}</b> · ${d.o.qty} units · spend ${fmt(d.o.spend,0)} · expected contribution ${fmt(d.o.ex,0)} · forecast v${d.fver}</p>
+ ${S.approved?`<div class="locked">🔒 <b>Approved version ${S.approved.v} (protected).</b> Owner, ${S.approved.t}.<br>Reason: ${S.approved.r}</div>
+ <label><input type="checkbox" ${ui.xfail?'checked':''} onchange="ui.xfail=this.checked"> Demo: simulate export failure</label><br><button class="btn" onclick="doExport()">Export approved plan (CSV)</button><div class="sub">The file is for your existing purchasing process. No orders are sent.</div>`
+ :!ui.appr?`<button class="btn" onclick="ui.appr=true;render();step(1)">Approve this draft</button>`
+ :`<span class="tag">Recheck (step 2)</span>${ck.map(c=>`<div class="chk">${c[1]?'✅':'❌'} ${c[0]}</div>`).join('')}
+ ${ready?`<label for="rat">Decision and reason</label><textarea id="rat" rows="2" placeholder="Why this option?"></textarea><label><input type="checkbox" ${ui.conc?'checked':''} onchange="ui.conc=this.checked"> Demo: simulate a concurrent edit</label><br><button class="btn" onclick="approve()">Confirm approval</button><button class="btn sec" onclick="ui.appr=false;render()">Back</button>`
+ :`<div class="msg err" role="alert">Approval blocked. ${!ck[4][1]?'The forecast changed after this draft, so the plan returns to UC3. ':''}${!ck[2][1]?'Data is stale; refresh in UC2. ':''}${!ck[3][1]?'Supply is not confirmed. ':''}</div><button class="btn" onclick="go('uc3')">Return to UC3</button>`}`}`}
+ <div id="m4"></div></div>
+ ${S.audit.length?`<div class="card"><span class="tag">Change record (latest 6)</span><table><tr><th>When</th><th>Who</th><th>Action</th></tr>${S.audit.slice(-6).reverse().map(a=>`<tr><td>${a.t}</td><td>${a.who}</td><td style="text-align:left">${a.a}</td></tr>`).join('')}</table></div>`:''}`}
+function approve(){step(3);const r=$('rat').value.trim();if(!r)return M('m4','Enter the reason for your decision (step 3).','err');
+ if(ui.conc){ui.conc=false;return M('m4','Another edit changed this draft while you were approving. Reload the draft and confirm again.','err')}
+ S.approved={v:1,t:new Date().toLocaleString('en-AU'),r};audit('Approved plan v1: '+r);ui.appr=false;save();render();step(3)}
+function doExport(){step(4);if(ui.xfail){ui.xfail=false;return M('m4','Export failed. Approval is unchanged. <button class="btn sec" onclick="doExport()">Retry export</button>','err')}
+ const d=S.draft,a=S.approved;const csv='Option,Category,Units,Spend (A$),Expected contribution (A$),Forecast version,Approved,Reason\n'+[d.o.name,d.cat,d.o.qty,d.o.spend,d.o.ex,d.fver,a.t.replace(',',''),'"'+a.r.replace(/"/g,"'")+'"'].join(',');
+ const l=document.createElement('a');l.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));l.download='approved_buying_plan.csv';l.click();audit('Exported approved plan');step(5);M('m4','Approved plan exported. No orders were sent.','ok')}
+/* Business case (matches proposal tables: Year 1 includes set-up) */
+function biz(){const f=S.fin;
+ const sl=(k,l,mn,mx,st)=>`<div><label for="r_${k}">${l}: <b id="v_${k}">${f[k]}</b></label><input id="r_${k}" type="range" min="${mn}" max="${mx}" step="${st}" value="${f[k]}" oninput="S.fin.${k}=+this.value;finCalc();save()"></div>`;
+ return `<h2>Business case: cost, payback and ROI</h2><p class="sub">Five-year view that matches the proposal. Defaults reproduce its figures: payback 2.51 years after launch, five-year ROI 65.8%.</p>
+ <div class="card"><div class="grid">${sl('lost','Lost purchases per week',2,20,1)}${sl('rec','Recovery rate (%)',10,80,5)}${sl('price','Average sale (A$)',60,200,5)}${sl('margin','Contribution margin (%)',20,70,1)}${sl('mark','Avoided markdowns (A$/yr)',0,5000,100)}${sl('adopt','Year 1 adoption (%)',30,100,5)}${sl('cap','Non-recurring cost (A$)',15000,40000,500)}${sl('run','Recurring cost (A$/yr)',2000,8000,200)}</div><button class="btn sec" onclick="S.fin=fresh().fin;save();render()">Restore proposal assumptions</button></div><div id="finOut"></div>`}
+function finCalc(){const f=S.fin;const ann=f.lost*f.rec/100*f.price*f.margin/100*52;const rows=[];let cum=0,ben=0,cost=0,pb=null;
+ for(let y=1;y<=5;y++){const k=y===1?f.adopt/100:1;const b=(ann+f.mark)*k;const c=f.run+(y===1?f.cap:0);const n=b-c;const prev=cum;cum+=n;ben+=b;cost+=c;
+  if(pb===null&&cum>=0&&n>0)pb=y-1+(-prev)/n;rows.push({y,b,c,n,cum})}
+ const roi=(ben-cost)/cost*100,half=ben/2-cost;
+ ['lost','rec','price','margin','mark','adopt','cap','run'].forEach(k=>{const e=$('v_'+k);if(e)e.textContent=f[k]});
+ const W2=520,H=150,mn=Math.min(...rows.map(r=>r.cum),0),mx=Math.max(...rows.map(r=>r.cum),1);const X=i=>40+i*(W2-60)/4,Y=v=>H-20-(v-mn)/(mx-mn)*(H-40);
+ const pts=rows.map((r,i)=>X(i)+','+Y(r.cum)).join(' ');
+ $('finOut').innerHTML=`<div class="grid"><div class="card"><span class="tag">Payback</span><div class="big">${pb===null?'Not reached':nf(pb)+' yrs'}</div><div class="sub" style="margin:0">after launch; add about 14 weeks delivery</div></div>
+ <div class="card"><span class="tag">Five-year ROI</span><div class="big ${roi<0?'neg':''}">${roi.toFixed(1)}%</div></div>
+ <div class="card"><span class="tag">Net gain</span><div class="big ${ben-cost<0?'neg':''}">${fmt(ben-cost)}</div></div>
+ <div class="card"><span class="tag">At half the benefits</span><div class="big ${half<0?'neg':''}">${fmt(half)}</div><div class="sub" style="margin:0">${half<0?'Not recovered: validate demand first':'Still positive'}</div></div></div>
+ <div class="card"><span class="tag">Running balance (A$)</span><svg viewBox="0 0 ${W2} ${H}" width="100%" role="img" aria-label="Running balance over five years"><line x1="40" x2="${W2-20}" y1="${Y(0)}" y2="${Y(0)}" stroke="#4a6a85" stroke-dasharray="4"/><polyline fill="none" stroke="#b8f46a" stroke-width="3" points="${pts}"/>${rows.map((r,i)=>`<circle cx="${X(i)}" cy="${Y(r.cum)}" r="4" fill="${r.cum<0?'#f58384':'#b8f46a'}"/><text x="${X(i)}" y="${H-4}" fill="#a9bac3" font-size="11" text-anchor="middle">Y${r.y}</text>`).join('')}</svg></div>
+ <div class="card"><table><tr><th>A$</th>${rows.map(r=>`<th>Year ${r.y}</th>`).join('')}<th>Total</th></tr>
+ <tr><td>Total benefits</td>${rows.map(r=>`<td>${nf(r.b)}</td>`).join('')}<td>${nf(ben)}</td></tr>
+ <tr><td>Total costs</td>${rows.map(r=>`<td>${nf(r.c)}</td>`).join('')}<td>${nf(cost)}</td></tr>
+ <tr><td>Net cash flow</td>${rows.map(r=>`<td class="${r.n<0?'neg':'pos'}">${nf(r.n)}</td>`).join('')}<td>${nf(ben-cost)}</td></tr>
+ <tr><td>Running balance</td>${rows.map(r=>`<td class="${r.cum<0?'neg':'pos'}">${nf(r.cum)}</td>`).join('')}<td></td></tr></table>
+ <p class="sub" style="margin-top:10px">Unpriced benefits (not included): stronger supplier discussions, better customer insight and continuity of buying knowledge.</p></div>`}
+function showGuide(){$('modal').innerHTML=`<div class="ov" role="dialog" aria-modal="true" aria-label="Demo guide"><div class="card"><h2>Demo guide</h2>
+ <p class="sub">A suggested five-minute walkthrough that follows the proposal.</p><ol>
+ <li><b>Staff · UC1.</b> Record an unmet request. Try a missing size, then the connection failure and Retry.</li>
+ <li><b>Staff · UC5.</b> Review records, filter them, open one. Try the expired session.</li>
+ <li><b>Owner · UC2.</b> Open the forecast, view size details, add a reason, and enter an expert estimate for limited history. Try a failed import.</li>
+ <li><b>Owner · UC3.</b> Compare Options A and B. Set shelf space below the minimum order to see a conflict.</li>
+ <li><b>Owner · UC4.</b> Recheck, approve with a reason, then export. Try a concurrent edit and an export failure.</li>
+ <li><b>Business case.</b> Move the sliders and check payback and ROI.</li></ol>
+ <p class="sub">Staff cannot open UC2–UC4 (access restricted). All data is illustrative and saved only in this browser.</p><button class="btn" onclick="$('modal').innerHTML=''">Close</button></div></div>`}
+S=load();render();
+</script></body></html>
